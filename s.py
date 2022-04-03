@@ -8,7 +8,7 @@ sel = selectors.DefaultSelector()
 # takes a new socket object and registers it with the selector
 # argument: new client socket object
 # function: registers the new socket object with the selector
-def accept_wrapper(sock):
+def accept_client(sock):
     conn, addr = sock.accept()  # listening socket has been registered for the event selectors.EVENT_READ so it should be ready to read (assuming the correct port number has been used by the client)
     print(f"Accepted connection from {addr}")
     conn.setblocking(False) # put events from this new socket in non-blocking mode
@@ -34,14 +34,14 @@ def service_connection(key, mask):
             print(f"Closing connection to {data.addr}\n") # if no data is received then the client has closed their socket, so the server should too
             sel.unregister(sock) # first, unregister the dead client socket with the selector
             sock.close() # then close the connection to the client socket
-            stayin_alive()
+            always_on()
     if mask & selectors.EVENT_WRITE: # if the mask and selectors.EVENT_WRITE both evaluate to true then the socket is ready for WRITING (to)
         if data.outb: # if there is any data stored in data.outb (i.e. if any data has been read in from the client socket, as we are immediately appending received data to data.outb)
             print(f"Echoing {data.outb!r} to {data.addr}") # echo any received and stored data back to the socket it originated from
             sent = sock.send(data.outb)  # .send() returns the number of bytes sent 
             data.outb = data.outb[sent:] # this value is then used with slice notation to discard the bytes sent from the data.outb buffer
 
-def stayin_alive():
+def always_on():
     host  = sys.argv[1]   # read the host address and listening port number from terminal
     port = int(sys.argv[2])
     lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create a new socket 
@@ -65,14 +65,14 @@ def stayin_alive():
             # mask is an event mask of the operations that are ready
             for key, mask in events:
                 if key.data is None: # if there is no data, then you know it's from the listening socket and you need to accept the connection
-                    accept_wrapper(key.fileobj) # call a subroutine to get the new socket object and register it with the selector
+                    accept_client(key.fileobj) # call a subroutine to get the new socket object and register it with the selector
                 else: # if there is data, then you know this is a client object that has already been accepted 
                     service_connection(key, mask) # call the subroutine that services a pre-existing client socket
     except KeyboardInterrupt:
         print("Server process terminated.")
     finally:
         sel.close()
-        stayin_alive()
+        always_on()
 
 if len(sys.argv) != 3:
     print(f"Usage: {sys.argv[0]} <host> <port>")
@@ -91,4 +91,4 @@ if sys.argv[1] == "127.0.0.5":
 
 print(f"RSU {node_id} server process initiated.")
 
-stayin_alive()
+always_on()
