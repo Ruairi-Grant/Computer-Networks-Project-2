@@ -31,44 +31,64 @@ def service_connection(key, mask):
         if recv_data:
             data.outb += recv_data # any data read in is appended to data.outb to be sent back later (recall that this server echoes back to the clients)
         else:
-            print(f"Closing connection to {data.addr}") # if no data is received then the client has closed their socket, so the server should too
+            print(f"Closing connection to {data.addr}\n") # if no data is received then the client has closed their socket, so the server should too
             sel.unregister(sock) # first, unregister the dead client socket with the selector
             sock.close() # then close the connection to the client socket
+            stayin_alive()
     if mask & selectors.EVENT_WRITE: # if the mask and selectors.EVENT_WRITE both evaluate to true then the socket is ready for WRITING (to)
         if data.outb: # if there is any data stored in data.outb (i.e. if any data has been read in from the client socket, as we are immediately appending received data to data.outb)
             print(f"Echoing {data.outb!r} to {data.addr}") # echo any received and stored data back to the socket it originated from
             sent = sock.send(data.outb)  # .send() returns the number of bytes sent 
             data.outb = data.outb[sent:] # this value is then used with slice notation to discard the bytes sent from the data.outb buffer
 
+def stayin_alive():
+    host  = sys.argv[1]   # read the host address and listening port number from terminal
+    port = int(sys.argv[2])
+    lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create a new socket 
+    
+    lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    lsock.bind((host, port)) # bind it to the address and port number taken from the terminal
+    lsock.listen() # listen for new connections
+    print(f"Listening on {(host, port)}")
+    lsock.setblocking(False) # calls to the socket will no longer block
+    sel.register(lsock, selectors.EVENT_READ, data=None) # registers the listening socket to be monitored with sel.select()  
+    # "data" is used to keep track of what has been sent and received on the socket
+
+    try:
+        while True:
+            events = sel.select(timeout=None) # thanks to the non blocking socket set up, we can wait for events on multiple sockets and deal with them appropriately
+            # lack of a timeout ensures that execution is blocked until there are sockets ready for i/o
+            # events is returned a list of tuples, one for each socket, each containing a key and a mask
+            # the key is a SelectorKey namedtuple that contains a fileobj attribute
+            # key.fileobj is the socket object
+            # mask is an event mask of the operations that are ready
+            for key, mask in events:
+                if key.data is None: # if there is no data, then you know it's from the listening socket and you need to accept the connection
+                    accept_wrapper(key.fileobj) # call a subroutine to get the new socket object and register it with the selector
+                else: # if there is data, then you know this is a client object that has already been accepted 
+                    service_connection(key, mask) # call the subroutine that services a pre-existing client socket
+    except KeyboardInterrupt:
+        print("Server process terminated.")
+    finally:
+        sel.close()
+        stayin_alive()
 
 if len(sys.argv) != 3:
     print(f"Usage: {sys.argv[0]} <host> <port>")
     sys.exit(1)
 
-host, port = sys.argv[1], int(sys.argv[2]) # read the host address and listening port number from terminal
-lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create a new socket 
-lsock.bind((host, port)) # bind it to the address and port number taken from the terminal
-lsock.listen() # listen for new connections
-print("RSU A server process initiated.")
-print(f"Listening on {(host, port)}")
-lsock.setblocking(False) # calls to the socket will no longer block
-sel.register(lsock, selectors.EVENT_READ, data=None) # registers the listening socket to be monitored with sel.select()  
-# "data" is used to keep track of what has been sent and received on the socket
+if sys.argv[1] == "127.0.0.1":
+    node_id = "A"
+if sys.argv[1] == "127.0.0.2":
+    node_id = "B"
+if sys.argv[1] == "127.0.0.3":
+    node_id = "C"
+if sys.argv[1] == "127.0.0.4":
+    node_id = "D"
+if sys.argv[1] == "127.0.0.5":
+    node_id = "E"
 
-try:
-    while True:
-        events = sel.select(timeout=None) # thanks to the non blocking socket set up, we can wait for events on multiple sockets and deal with them appropriately
-        # lack of a timeout ensures that execution is blocked until there are sockets ready for i/o
-        # events is returned a list of tuples, one for each socket, each containing a key and a mask
-        # the key is a SelectorKey namedtuple that contains a fileobj attribute
-        # key.fileobj is the socket object
-        # mask is an event mask of the operations that are ready
-        for key, mask in events:
-            if key.data is None: # if there is no data, then you know it's from the listening socket and you need to accept the connection
-                accept_wrapper(key.fileobj) # call a subroutine to get the new socket object and register it with the selector
-            else: # if there is data, then you know this is a client object that has already been accepted 
-                service_connection(key, mask) # call the subroutine that services a pre-existing client socket
-except KeyboardInterrupt:
-    print("Server process terminated.")
-finally:
-    sel.close()
+print(f"RSU {node_id} server process initiated.")
+
+stayin_alive()
