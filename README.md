@@ -1,5 +1,24 @@
 # 3D3_Project_2
 
+To demo c.py and s.py:
+1. In one window, run "python3 s.py 127.0.0.1 33500"
+2. In another window, run "python3 c.py B A F"
+3. In a third window, run "python3 c.py C A G"
+
+This simulates the following:
+- Node A's server process (which should be permanently running) starting up
+- Node B takes a node list (which it has received via UDP from a bus) and identifies the next node that must be contacted (Node A)
+- Node B then contacts node A via TCP and sends it the node list
+- Node A echoes these messages back to Node B to as confirmation that they were received
+- Node C then contacts A with a separate node list and the same procedure takes place
+- The programs are terminated via keyboard interrupt (ctrl + c, ctrl + z, ctrl + fn + break, etc. depending on your computer)
+
+Issues still to be resolved:
+- The goal now is to tweak the server process so that when its connection with one client socket ends the server continues to listen for new connections to others
+- At the moment we need to keep a redundant connection between server and client 1 in order for the server to be able to receive a message from client 2 (you will see this when you run the code - if you terminate any of the programs with the keyboard interrupt all of the other active programs die too the second the TCP connection goes down)
+- Fixing this allows us to revert the client code to its original form: it takes in a node list, pings the next node, receives confirmation that the ping was received, THEN TERMINATES
+- This is the last part of the RSU TCP implementation, after we get that working we can focus on the UDP transfer of node lists from the buses to the RSUs
+- The code is also very messy: some comments need to be removed/updated and some redundant lines of code need to be taken out 
 
 
 ## Getting started

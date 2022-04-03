@@ -24,7 +24,7 @@ def accept_wrapper(sock):
 #            mask = the events that are ready
 # function: 
 def service_connection(key, mask):
-    sock = key.fileobj # sock now represents the cllient socket object
+    sock = key.fileobj # sock now represents the client socket object
     data = key.data # data now represents the data object associated with the socket object
     if mask & selectors.EVENT_READ: # if the mask and selectors.EVENT_READ both evaluate to true, then the socket is ready for READING (from)
         recv_data = sock.recv(1024)  # read data in from the client
@@ -49,6 +49,7 @@ host, port = sys.argv[1], int(sys.argv[2]) # read the host address and listening
 lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create a new socket 
 lsock.bind((host, port)) # bind it to the address and port number taken from the terminal
 lsock.listen() # listen for new connections
+print("RSU A server process initiated.")
 print(f"Listening on {(host, port)}")
 lsock.setblocking(False) # calls to the socket will no longer block
 sel.register(lsock, selectors.EVENT_READ, data=None) # registers the listening socket to be monitored with sel.select()  
@@ -68,6 +69,6 @@ try:
             else: # if there is data, then you know this is a client object that has already been accepted 
                 service_connection(key, mask) # call the subroutine that services a pre-existing client socket
 except KeyboardInterrupt:
-    print("Caught keyboard interrupt, exiting")
+    print("Server process terminated.")
 finally:
     sel.close()
