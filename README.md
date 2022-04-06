@@ -10,6 +10,7 @@ Todo: (in order of importance)
 - make bus.py accept user input for host and port number
 - design the demo
 - have bus.py run from a seperate pi.
+- Change so that node B clears road BC not AB.
 - encapsulate node.py and pi_s.py for each node in the same place
 
 
