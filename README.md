@@ -1,5 +1,17 @@
 # 3D3_Project_2
 
+To demo bus.py, and the RSU represented by pi_s.py and node.py
+1. run pi_s.py and pass its host and port number to it: eg. python3 pi_s.py 127.0.0.1 33500
+2. run node.py 
+3. run bus.py
+
+Data sould go to node.py and then to pi_s.py. If bus.py is stopped and another instance is started it will continue to work. 
+Todo: (in order of importance)
+- make bus.py accept user input for host and port number
+- design the demo
+- encapsulate node.py and pi_s.py for each node in the same place
+
+
 To demo c.py and s.py:
 1. In one window, run "python3 s.py 127.0.0.1 33500"
 2. In another window, run "python3 c.py B A F"
