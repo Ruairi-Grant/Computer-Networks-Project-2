@@ -1,0 +1,51 @@
+
+
+from socket import *
+from threading import *
+
+# Temporary for testing
+HOST = "127.0.0.1"  # The server's hostname or IP address
+PORT = 33500  # The port used by the server
+
+def SendToServer():
+    with socket(AF_INET, SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        s.sendall(b"Hello, world")
+        data = s.recv(1024)
+
+    print(f"Received {data!r}")
+
+def Receiving(sock,first_connect):
+    while True:
+        # decode data and use c.py to send it
+        data, addr = sock.recvfrom(1024)
+        data = data.decode('ascii')
+        nodes, eta = data.split('/')
+        nodes = nodes.strip()
+        nodes = nodes.split(' ')
+        print("Travel Route: ", nodes, "\nETA to first node: ", eta)
+        print("Start clearing traffic between ", nodes[0], " and ", nodes[1])
+        if len(nodes)>2:
+            SendToServer()
+
+
+my_addr =('127.0.0.1',65432)
+#t_ip = '127.0.0.1' 
+#target =(t_ip, 65432)
+#node_table = {'C':(t_ip, 65432)}
+
+
+s = socket(AF_INET, SOCK_DGRAM)
+s.bind(my_addr)
+
+print("waiting connection")
+
+once = True
+
+x = Thread(target=Receiving, args=(s, once))
+x.start()
+
+#wel="OK!"
+#for key in node_table:
+    #target = node_table[key]
+    #s.sendto(wel.encode('ascii'), target)
