@@ -9,6 +9,7 @@ Data sould go to node.py and then to pi_s.py. If bus.py is stopped and another i
 Todo: (in order of importance)
 - make bus.py accept user input for host and port number
 - design the demo
+- have bus.py run from a seperate pi.
 - encapsulate node.py and pi_s.py for each node in the same place
 
 
