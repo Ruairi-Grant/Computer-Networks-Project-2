@@ -42,7 +42,7 @@ print("waiting connection")
 
 
 
-x = Thread(target=Receiving, args=(s))
+x = Thread(target=Receiving, args=(s,))
 x.start()
 
 #wel="OK!"
