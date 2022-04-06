@@ -7,7 +7,6 @@ To demo bus.py, and the RSU represented by pi_s.py and node.py
 
 Data sould go to node.py and then to pi_s.py. If bus.py is stopped and another instance is started it will continue to work. 
 Todo: (in order of importance)
-- make bus.py accept user input for host and port number
 - design the demo
 - have bus.py run from a seperate pi.
 - Change so that node B clears road BC not AB.
