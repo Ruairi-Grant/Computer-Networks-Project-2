@@ -7,15 +7,15 @@ from threading import *
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 33500  # The port used by the server
 
-def SendToServer():
+def SendToServer(nodeList):
     with socket(AF_INET, SOCK_STREAM) as s:
         s.connect((HOST, PORT))
-        s.sendall(b"Hello, world")
+        s.sendall(nodeList)
         data = s.recv(1024)
 
     print(f"Received {data!r}")
 
-def Receiving(sock,first_connect):
+def Receiving(sock):
     while True:
         # decode data and use c.py to send it
         data, addr = sock.recvfrom(1024)
@@ -26,7 +26,7 @@ def Receiving(sock,first_connect):
         print("Travel Route: ", nodes, "\nETA to first node: ", eta)
         print("Start clearing traffic between ", nodes[0], " and ", nodes[1])
         if len(nodes)>2:
-            SendToServer()
+            SendToServer(data[1:].encode('ascii'))
 
 
 my_addr =('127.0.0.1',65432)
@@ -40,9 +40,9 @@ s.bind(my_addr)
 
 print("waiting connection")
 
-once = True
 
-x = Thread(target=Receiving, args=(s, once))
+
+x = Thread(target=Receiving, args=(s))
 x.start()
 
 #wel="OK!"

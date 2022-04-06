@@ -31,6 +31,13 @@ def service_connection(key, mask):
         recv_data = sock.recv(1024)  # read data in from the client
         if recv_data:
             data.outb += recv_data # any data read in is appended to data.outb to be sent back later (recall that this server echoes back to the clients)
+            ## print service
+            recv_data = recv_data.decode('ascii')
+            nodes, eta = recv_data.split('/')
+            nodes = nodes.strip()
+            nodes = nodes.split(' ')
+            print("Travel Route: ", nodes, "\nETA to first node: ", eta)
+            print("Start clearing traffic between ", nodes[0], " and ", nodes[1])
         else:
             print(f"Closing connection to {data.addr}\n") # if no data is received then the client has closed their socket, so the server should too
             sel.unregister(sock) # first, unregister the dead client socket with the selector
