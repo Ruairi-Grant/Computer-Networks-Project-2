@@ -4,7 +4,7 @@ from socket import *
 from threading import *
 
 # Temporary for testing
-HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "127.0.0.1"  # The server's hostname or IP address on localhost
 PORT = 33500  # The port used by the server
 
 def SendToServer(nodeList):
@@ -29,7 +29,7 @@ def Receiving(sock):
             SendToServer(data[1:].encode('ascii'))
 
 
-my_addr =('127.0.0.1',65432)
+my_addr =('10.35.70.4',65432) # Ensure Hostname is correct using hostname -I
 #t_ip = '127.0.0.1' 
 #target =(t_ip, 65432)
 #node_table = {'C':(t_ip, 65432)}
