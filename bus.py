@@ -11,23 +11,25 @@ if len(sys.argv) < 4:
 node_id = sys.argv[1]
 print(f"RSU {node_id} client process active.")
 
-print(f"Node list read in: {sys.argv[2]}, {sys.argv[3]}")
+print(f"Node list read in: {sys.argv[1]}, {sys.argv[2]}, {sys.argv[3]}")
 
+# need to know hostname of node.py using hostname -I
+# need different port numbers for each
 if sys.argv[2] == "A":
-    host = "127.0.0.1"
+    host = "10.35.70.4"
     port = 33500    
 if sys.argv[2] == "B":
-    host = "127.0.0.2"
-    port = 33500
+    host = "10.35.70.4"
+    port = 33501
 if sys.argv[2] == "C":
-    host = "127.0.0.3"
-    port = "33500"    
+    host = "10.35.70.4"
+    port = 33502    
 if sys.argv[2] == "D":
-    host = "127.0.0.4"
-    port = "33500"  
+    host = "10.35.70.4"
+    port = 33503  
 if sys.argv[2] == "E":
-    host = "127.0.0.5"
-    port = "33500"
+    host = "10.35.70.4"
+    port = 33504
 
 serverAddressPort = (host, port)
 buffer = 1024

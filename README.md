@@ -10,6 +10,7 @@ Todo: (in order of importance)
 - design the demo
 - have bus.py run from a seperate pi.
 - Change so that node B clears road BC not AB.
+- get node.py to chose which pi_s.py it contacts
 - get pi_s.py to call its own c.py to send data to the next node
 - encapsulate node.py and pi_s.py for each node in the same place
 
