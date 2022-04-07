@@ -27,7 +27,7 @@ def Receiving(sock):
             SendToServer(data[1:].encode('ascii'))
 
 
-my_addr =('10.35.70.4',65432) # Ensure Hostname is correct using hostname -I
+my_addr =('10.35.70.4',33501) # Ensure Hostname is correct using hostname -I
 #t_ip = '127.0.0.1' 
 #target =(t_ip, 65432)
 #node_table = {'C':(t_ip, 65432)}
