@@ -3,12 +3,10 @@
 To demo bus.py, and the RSU represented by pi_s.py and node.py
 1. run pi_s.py and pass its host and port number to it: eg. python3 pi_s.py 127.0.0.1 33500
 2. run node.py 
-3. run bus.py
+3. run bus.py A B C
 
 Data sould go to node.py and then to pi_s.py. If bus.py is stopped and another instance is started it will continue to work. 
 Todo: (in order of importance)
-- design the demo
-- have bus.py run from a seperate pi.
 - Change so that node B clears road BC not AB.
 - get node.py to chose which pi_s.py it contacts
 - get pi_s.py to call its own c.py to send data to the next node
