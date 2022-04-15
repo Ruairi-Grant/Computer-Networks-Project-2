@@ -2,9 +2,9 @@
 
 Demonstration of RSU represented by node.py and s.py and of connecting client bus.py
 
-To demo bus.py, and the RSU represented by pi_s.py and node.py
-1. Ensure the adresses in bus.py, node.py and s.py are all consistent and available on the devices.
-1. In the first raspberry pi:  run s.py and pass its host and port number to it: eg. python3 pi_s.py 127.0.0.1 33500
+To demo bus.py, and the RSU represented by server.py and node.py
+1. Ensure the adresses in bus.py, node.py and server.py are all consistent and available on the devices.
+1. In the first raspberry pi:run server.py and pass its host and port number to it: eg. python3 server.py 127.0.0.1 33500
 2. In the same raspberry pi as above: run node.py 
 3. From a second raspberry pi:  run bus.py A B C
 
